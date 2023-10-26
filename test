@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <string.h>
+
+// Funzione per controllare se due permutazioni collidono
+int collide(const char *perm1, const char *perm2) {
+    int len = strlen(perm1);
+    for (int i = 0; i < len; i++) {
+        if (perm1[i] == perm2[i]) {
+            return 1; // Collisione
+        }
+    }
+    return 0; // Nessuna collisione
+}
+
+// Funzione per generare tutte le permutazioni di una stringa in ordine crescente
+void generatePermutations(char *str, int start, int end, char **permutations, int *count) {
+    if (start == end) {
+        // Controlla se la permutazione generata collide con le permutazioni precedenti
+        int valid = 1;
+        for (int i = 0; i < *count; i++) {
+            if (collide(str, permutations[i])) {
+                valid = 0;
+                break;
+            }
+        }
+
+        // Verifica se la permutazione è in ordine crescente
+        int increasing = 1;
+        for (int i = 0; i < end; i++) {
+            if (str[i] > str[i + 1]) {
+                increasing = 0;
+                break;
+            }
+        }
+
+        if (valid && increasing) {
+            printf("%s\n", str);
+            // Memorizza questa permutazione per future verifiche
+            strcpy(permutations[(*count)++], str);
+        }
+    } else {
+        for (int i = start; i <= end; i++) {
+            // Scambio i caratteri
+            char temp = str[start];
+            str[start] = str[i];
+            str[i] = temp;
+
+            generatePermutations(str, start + 1, end, permutations, count);
+
+            // Ripristino lo scambio per esplorare altre permutazioni
+            temp = str[start];
+            str[start] = str[i];
+            str[i] = temp;
+        }
+    }
+}
+
+int main() {
+    char input[20]; // Assumiamo che le permutazioni siano composte da massimo 20 caratteri
+    printf("Inserisci una stringa di permutazioni: ");
+    scanf("%s", input);
+
+    int numPermutations = strlen(input);
+
+    // Array per memorizzare le permutazioni precedentemente generate
+    char permutations[1000][20]; // Assumiamo un massimo di 1000 permutazioni di 20 caratteri
+    int count = 0;
+
+    printf("Permutazioni che non collidono con la stringa di input e sono in ordine crescente:\n");
+
+    generatePermutations(input, 0, numPermutations - 1, permutations, &count);
+
+    return 0;
+}

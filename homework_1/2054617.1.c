@@ -85,13 +85,11 @@ void    solve(int *starting_seq, int n)
     int index_found;
 
     ordered_seq = (int *)malloc(n * sizeof(int));
-    already_seen = (int *) calloc(n,sizeof(int));
+    already_seen = (int *) calloc(n, sizeof(int));
     copy_arr(starting_seq, ordered_seq, n);
-
     qsort(ordered_seq, n, sizeof(int), cmpfunc);
-    // selectionSort(ordered_seq, n);
 
-    for (int i = 0; i < n; i++) {
+.    for (int i = 0; i < n; i++) {
         if (ordered_seq[i] != starting_seq[i] && find_index(already_seen, ordered_seq[i], n) == -1) {
         current = starting_seq[i];
         how_many_steps = 0;

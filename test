@@ -1,4 +1,4 @@
-#include <stdio.h>
+tetelude <stdio.h>
 #include <string.h>
 
 // Funzione per controllare se due permutazioni collidono

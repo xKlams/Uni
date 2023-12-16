@@ -289,7 +289,11 @@ void    solve(int dim, int matrix[dim*dim])
                 if(markers[i] == 2)
                     markers[i] = 3;
             }
-            if(!setup(&index_of_col_to_search, dim, index_array, &magic_number, &k, markers, matrix)) return;
+            if(!setup(&index_of_col_to_search, dim, index_array, &magic_number, &k, markers, matrix)) 
+            {
+                if(is_first) printf("NO");
+                return;
+            }
         }
         else
         {

@@ -203,7 +203,7 @@ int check_rows_and_columns(int dim, int matrix[dim*dim], int ans_array[dim*dim],
     return(1);
 }
 
-int check_if_latin_square(int ans_array_dim, int dim, int ans_array[dim*dim], int matrix[dim*dim], int *is_first, int *already_printed)
+int check_if_latin_square(int ans_array_dim, int dim, int ans_array[dim*dim], int matrix[dim*dim], int *is_first)
 {
     int to_check[ft_sqrt(ans_array_dim)];
     
@@ -211,29 +211,29 @@ int check_if_latin_square(int ans_array_dim, int dim, int ans_array[dim*dim], in
         to_check[i] = matrix[ans_array[i]];
     if(check_rows_and_columns(dim, matrix, ans_array, ans_array_dim, to_check))
     {
-        if(already_printed[ans_array[1]] == 0){
         if(!(*is_first))
             printf(" - ");
         else *is_first = 0;
-            already_printed[ans_array[1]] = 1;
-            print_array(ans_array_dim, ans_array);  
-        }
+        print_array(ans_array_dim, ans_array);  
         return(1);
     }
     return(0);
 }
 
-int setup(int *index_of_col_to_search,int dim, int index_array[dim*dim], int *magic_number, int *k, int markers[dim], int matrix[dim*dim], int*check, int *start)
+int setup(int *index_of_col_to_search,int dim, int index_array[dim*dim], int *magic_number, int *k, int markers[dim], int matrix[dim*dim], int*check)
 {
     *k = 2;
     *check = 1;
-    (*start)++;
-    if(*start < dim)
+    for(int i = 0; i < dim; i++)
     {
-        *index_of_col_to_search = *start;
-        index_array[1] = *start;
-        *magic_number = matrix[*start];
-        return(1);
+        if(markers[i] == 0)
+        {
+            *index_of_col_to_search = i;
+            markers[i] = 2;
+            index_array[1] = i;
+            *magic_number = matrix[i];
+            return(1);
+        }
     }
     return(0);
 }
@@ -304,14 +304,22 @@ void    solve(int dim, int matrix[dim*dim])
                         goto label;
                 }
                 }
-                check_if_latin_square(ans_array_dim, dim, ans_array, matrix, &is_first, already_printed);
+                if(check_if_latin_square(ans_array_dim, dim, ans_array, matrix, &is_first) && already_printed[ans_array[1]] == 0)
+                {
+                    for(int i = 0; i < dim; i++) 
+                    {
+                        if(markers[i] == 2)
+                            markers[i] = 1;
+                    }
+                    already_printed[ans_array[1]] = 1;
+                }
             }
             for(int i = 0; i < dim; i++) 
             {
                 if(markers[i] == 2)
                     markers[i] = 3;
             }
-            if(!setup(&index_of_col_to_search, dim, index_array, &magic_number, &k, markers, matrix, &check, &start)) 
+            if(!setup(&index_of_col_to_search, dim, index_array, &magic_number, &k, markers, matrix, &check)) 
             {
                 if(is_first) printf("NO");
                 return;
